@@ -42,9 +42,11 @@ const findAllNotices = async (query) => {
   }
 
   const skip = (page - 1) * limit;
-  const [notices, total] = await Promise.all([
+  const [notices, total, activeCount, draftCount] = await Promise.all([
     Notice.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
     Notice.countDocuments(filter),
+    Notice.countDocuments({ status: { $in: ["published", "unpublished"] } }),
+    Notice.countDocuments({ status: "draft" }),
   ]);
 
   return {
@@ -52,6 +54,8 @@ const findAllNotices = async (query) => {
     page,
     limit,
     total,
+    activeCount,
+    draftCount,
   };
 };
 
@@ -83,10 +87,12 @@ const toggleNoticeStatus = async (id) => {
       break;
   }
 
+  // Mark as published now
   if (updateData.status === "published") {
     updateData.publishedAt = new Date();
   }
 
+  // Unpublish - remove timestamp
   if (updateData.status === "unpublished") {
     updateData.publishedAt = null;
   }

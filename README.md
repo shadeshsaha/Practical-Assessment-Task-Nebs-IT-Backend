@@ -19,12 +19,12 @@ This is the backend API for the Notice Board application built using Node.js, Ex
 
 ## Technology Stack
 
-- Node.js (v18+)
-- Express.js (v5, ES modules)
-- MongoDB with Mongoose ORM
-- dotenv for environment variable management
-- express-validator for request validation
-- nodemon for development
+- Runtime : Node.js
+- Framework : Express.js
+- Database : MongoDB, Mongoose
+- Validation : Zod
+- Security : Helmet, CORS
+- Dev Tools : Nodemon, Postman Collection
 
 ---
 
@@ -36,6 +36,52 @@ This is the backend API for the Notice Board application built using Node.js, Ex
 - MongoDB Atlas cluster ([Setup](https://www.mongodb.com/cloud/atlas))
 - Postman or any API testing tool (optional)
 
-### Setup
+### Installation & Setup
 
-1. Clone this repository
+# 1. Clone & Install
+
+git clone <repo>
+cd backend
+npm install
+
+# 2. Setup Environment
+
+.env # Edit required vars
+
+# 3. Run Server
+
+npm run dev
+
+---
+
+## API Documentation
+
+# Base URL: http://localhost:5000/api/v1
+
+# Postman Collection
+
+1. CREATE Notice: http://localhost:5000/api/v1/notices/
+   {
+   "title": "Meeting Tomorrow",
+   "body": "Team meeting at 10:10 AM in conference room B",
+   "targetEmployee": "testing",
+   "targetType": "finance",
+   "noticeType": "performance-improvement",
+   "publishDate": "2025-10-10T10:10:00Z",
+   "attachments": [],
+   "status": "published",
+   "priority": "high"
+   }
+
+2. GET All Notices: http://localhost:5000/api/v1/notices?page=1&limit=1&searchTerm=01
+
+3. GET Published Notices: http://localhost:5000/api/v1/notices?status=published
+
+4. GET Draft Notices: http://localhost:5000/api/v1/notices?status=draft
+
+5. GET Single Notice: http://localhost:5000/api/v1/notices/6930b15b6724011b24241d21
+
+6. UPDATE Status: http://localhost:5000/api/v1/notices/6930b15b6724011b24241d21/toggle-status
+   {
+   "status": "published"
+   }

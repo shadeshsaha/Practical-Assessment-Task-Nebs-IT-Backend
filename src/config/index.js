@@ -5,7 +5,7 @@ export const config = {
   env: process.env.NODE_ENV || "development",
   port: parseInt(process.env.PORT || "5000", 10),
   mongodbURI: process.env.MONGODB_URI,
-  corsOrigin: process.env.CORS_ORIGIN,
+  corsOrigin: process.env.CORS_ORIGIN.split(",").map((origin) => origin.trim()),
 };
 
 const requiredEnv = ["MONGODB_URI", "CORS_ORIGIN"];

@@ -7,7 +7,6 @@ import { ApiRoutes } from "./routes.js";
 
 const app = express();
 
-// Security Middleware
 app.use(helmet());
 app.use(
   cors({

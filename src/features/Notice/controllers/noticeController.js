@@ -19,6 +19,8 @@ const getAllNotices = asyncHandler(async (req, res) => {
     result.page,
     result.limit,
     result.total,
+    result.activeCount,
+    result.draftCount,
     "Notices retrieved successfully"
   );
 });
@@ -34,9 +36,7 @@ const toggleNoticeStatus = asyncHandler(async (req, res) => {
   const notice = await noticeService.toggleNoticeStatus(req.params.id);
 
   const message =
-    notice.status === "published"
-      ? "Notice published successfully"
-      : "Notice unpublished successfully";
+    notice.status === "published" ? "Notice Published" : "Notice Unpublished";
 
   ApiResponse.success(res, notice, message);
 });
