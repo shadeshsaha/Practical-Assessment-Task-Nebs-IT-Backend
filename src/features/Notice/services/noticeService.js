@@ -18,9 +18,7 @@ const findAllNotices = async (query) => {
     endDate,
   } = query;
 
-  // Build filter
   const filter = {};
-
   if (search) {
     filter.$text = { $search: search };
   }
@@ -44,7 +42,6 @@ const findAllNotices = async (query) => {
   }
 
   const skip = (page - 1) * limit;
-
   const [notices, total] = await Promise.all([
     Notice.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
     Notice.countDocuments(filter),
@@ -78,14 +75,20 @@ const toggleNoticeStatus = async (id) => {
   const updateData = {};
 
   switch (notice.status) {
-    case "draft":
+    case "unpublished":
       updateData.status = "published";
-      updateData.publishedAt = new Date();
       break;
     case "published":
-      updateData.status = "draft";
-      updateData.publishedAt = null;
+      updateData.status = "unpublished";
       break;
+  }
+
+  if (updateData.status === "published") {
+    updateData.publishedAt = new Date();
+  }
+
+  if (updateData.status === "unpublished") {
+    updateData.publishedAt = null;
   }
 
   const updatedNotice = await Notice.findByIdAndUpdate(

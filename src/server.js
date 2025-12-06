@@ -10,9 +10,8 @@ const nebsITServer = async () => {
     // Connect to database
     await connectDatabase();
 
-    // Start server
     const server = app.listen(config.port, () => {
-      console.info(`🚀 Server running on Port: ${config.port}`);
+      console.info(`Server running on Port: ${config.port}`);
     });
 
     // Handle unhandled promise rejections

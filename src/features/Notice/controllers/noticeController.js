@@ -2,18 +2,18 @@ import { ApiResponse } from "../../../utils/ApiResponse.js";
 import { asyncHandler } from "../../../utils/asyncHandler.js";
 import { noticeService } from "../services/noticeService.js";
 
-// create a notice
+// create a notice [POST /api/v1/notices]
 const createNotice = asyncHandler(async (req, res) => {
   const notice = await noticeService.createNotice(req.body);
-  ApiResponse.created(res, notice, "Notice created successfully");
+  ApiResponse.createdNotice(res, notice, "Notice created successfully");
 });
 
-// get all notices
+// get all notices [GET /api/v1/notices]
 const getAllNotices = asyncHandler(async (req, res) => {
   const query = req.query;
   const result = await noticeService.findAllNotices(query);
 
-  ApiResponse.paginated(
+  ApiResponse.paginatedNotice(
     res,
     result.data,
     result.page,
@@ -23,13 +23,13 @@ const getAllNotices = asyncHandler(async (req, res) => {
   );
 });
 
-// get a single notice
+// get a single notice [GET /api/v1/notices/:id]
 const getNoticeById = asyncHandler(async (req, res) => {
   const notice = await noticeService.findNoticeById(req.params.id);
   ApiResponse.success(res, notice, "Notice retrieved successfully");
 });
 
-// notice status
+// notice status [PATCH /api/v1/notices/:id/toggle-status]
 const toggleNoticeStatus = asyncHandler(async (req, res) => {
   const notice = await noticeService.toggleNoticeStatus(req.params.id);
 

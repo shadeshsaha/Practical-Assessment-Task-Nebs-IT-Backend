@@ -3,14 +3,12 @@ import express from "express";
 import helmet from "helmet";
 import { config } from "./config/index.js";
 import { errorHandler, notFoundHandler } from "./middleware/errorMiddleware.js";
-import { apiRoutes } from "./routes.js";
+import { ApiRoutes } from "./routes.js";
 
 const app = express();
 
 // Security Middleware
 app.use(helmet());
-
-// CORS
 app.use(
   cors({
     origin: config.corsOrigin,
@@ -19,21 +17,13 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-
-// Body parsing
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
-// Handle favicon requests
-app.get("/favicon.ico", (req, res) => res.status(204).end());
-
 // API Routes
-app.use("/api/v1", apiRoutes);
+app.use("/api/v1", ApiRoutes);
 
-// Handle 404
 app.use(notFoundHandler);
-
-// Global error handler
 app.use(errorHandler);
 
 export { app };

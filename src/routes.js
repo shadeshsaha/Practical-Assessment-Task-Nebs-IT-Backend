@@ -1,9 +1,8 @@
 import { Router } from "express";
-import { noticeRoutes } from "./features/Notice/routes/noticeRoutes.js";
+import { NoticeRoutes } from "./features/Notice/routes/noticeRoutes.js";
 
 const router = Router();
 
-// Health check
 router.get("/health", (_req, res) => {
   res.status(200).json({
     success: true,
@@ -13,6 +12,6 @@ router.get("/health", (_req, res) => {
 });
 
 // API Routes
-router.use("/notices", noticeRoutes);
+router.use("/notices", NoticeRoutes);
 
-export { router as apiRoutes };
+export { router as ApiRoutes };

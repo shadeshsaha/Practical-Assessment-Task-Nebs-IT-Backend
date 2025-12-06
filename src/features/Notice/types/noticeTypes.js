@@ -19,44 +19,4 @@ export const NoticeType = [
   "advisory-personal-reminder",
 ];
 
-export const NoticeStatus = ["draft", "published"];
-
-export const IAttachment = {
-  fileName: "",
-  fileUrl: "",
-};
-
-export const INotice = {
-  title: "",
-  body: "",
-  targetType: "",
-  targetEmployees: [],
-  noticeType: "",
-  publishDate: new Date(),
-  attachments: [],
-  status: "",
-  priority: "",
-  publishedAt: new Date(),
-};
-
-export const CreateNoticeDto = {
-  title: "",
-  body: "",
-  targetType: "",
-  targetEmployees: [],
-  noticeType: "",
-  publishDate: "",
-  attachments: [],
-  status: "",
-  priority: "",
-};
-
-export const NoticeQueryParams = {
-  page: 1,
-  limit: 10,
-  search: "",
-  targetType: "",
-  status: "",
-  startDate: "",
-  endDate: "",
-};
+export const NoticeStatus = ["draft", "published", "unpublished"];

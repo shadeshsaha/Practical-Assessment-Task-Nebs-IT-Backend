@@ -30,4 +30,4 @@ router.patch(
   noticeController.toggleNoticeStatus
 );
 
-export { router as noticeRoutes };
+export { router as NoticeRoutes };

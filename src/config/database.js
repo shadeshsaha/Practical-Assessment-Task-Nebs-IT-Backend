@@ -4,10 +4,9 @@ import { config } from "./index.js";
 export const connectDatabase = async () => {
   try {
     const conn = await mongoose.connect(config.mongodbURI);
-
+    // console.info(`MongoDB Connected Successfully: ${conn.connection.host}`);
     console.info(`MongoDB Connected Successfully`);
 
-    // Handle connection events
     mongoose.connection.on("error", (error) => {
       console.error("MongoDB connection error:", error);
     });
