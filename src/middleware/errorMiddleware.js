@@ -1,42 +1,71 @@
-import mongoose from "mongoose";
 import { config } from "../config/index.js";
-import { ApiError } from "../utils/ApiError.js";
+// import { ApiError } from "../utils/ApiError.js";
 
 export const errorHandler = (err, _req, res, _next) => {
-  let error = err;
-  console.error(err.message, err.stack);
+  console.error("Raw Error:", err);
 
-  // Mongoose Cast Error
-  if (err instanceof mongoose.Error.CastError) {
-    error = ApiError.badRequest(`Invalid ${err.path}: ${err.value}`);
+  // EARLY RETURN for ApiError
+  if (err.statusCode) {
+    return res.status(err.statusCode).json({
+      success: false,
+      message: err.message,
+      ...(err.errors && { errors: err.errors }),
+      ...(config.env === "development" && { stack: err.stack }),
+    });
+  }
+
+  // Zod Validation Errors
+  if (err.name === "ZodError") {
+    const errorMessages = err.issues.map((issue) => ({
+      field: issue.path.join("."),
+      message: issue.message,
+    }));
+    return res.status(400).json({
+      success: false,
+      message: "Validation failed",
+      errors: errorMessages,
+    });
+  }
+
+  // Mongoose Cast Error (Invalid ID)
+  if (err.name === "CastError") {
+    return res.status(400).json({
+      success: false,
+      message: `Invalid ID: ${err.value}`,
+    });
   }
 
   // Mongoose Validation Error
-  if (err instanceof mongoose.Error.ValidationError) {
+  if (err.name === "ValidationError") {
     const messages = Object.values(err.errors).map((e) => e.message);
-    error = ApiError.badRequest("Validation Error", messages);
+    return res.status(400).json({
+      success: false,
+      message: "Database validation failed",
+      errors: messages,
+    });
   }
 
-  // Mongoose Duplicate Key Error
+  // MongoDB Duplicate Key
   if (err.name === "MongoServerError" && err.code === 11000) {
     const field = Object.keys(err.keyValue)[0];
-    error = ApiError.conflict(`${field} already exists`);
+    return res.status(409).json({
+      success: false,
+      message: `${field} already exists`,
+    });
   }
 
-  // Default to ApiError
-  if (!(error instanceof ApiError)) {
-    error = new ApiError(500, err.message || "Internal Server Error");
-  }
-
-  const apiError = error;
-  res.status(apiError.statusCode).json({
+  // Generic Error
+  return res.status(500).json({
     success: false,
-    message: apiError.message,
-    errors: apiError.errors,
-    ...(config.env === "development" && { stack: apiError.stack }),
+    message: err.message || "Internal Server Error",
+    ...(config.env === "development" && { stack: err.stack }),
   });
 };
 
 export const notFoundHandler = (req, _res, next) => {
-  next(ApiError.notFound(`Route ${req.originalUrl} not found`));
+  const error = {
+    statusCode: 404,
+    message: `Route ${req.originalUrl} not found`,
+  };
+  next(error);
 };
