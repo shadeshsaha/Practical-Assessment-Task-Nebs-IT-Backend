@@ -58,6 +58,8 @@ npm run dev
 
 # Base URL: http://localhost:5000/api/v1
 
+# Live URL: https://nebs-it-backend-task.vercel.app
+
 # Postman Collection
 
 1. CREATE Notice: http://localhost:5000/api/v1/notices/
