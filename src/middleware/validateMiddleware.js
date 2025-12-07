@@ -22,7 +22,6 @@ export const validateMiddleware = (schema) => {
         dataToValidate = req.body || {};
       }
 
-      console.log("🔍 Validating:", schema._def.typeName, dataToValidate);
       await schema.parseAsync(dataToValidate);
       next();
     } catch (error) {

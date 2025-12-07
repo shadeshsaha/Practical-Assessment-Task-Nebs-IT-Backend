@@ -5,8 +5,9 @@
   "type": "module",
   "main": "src/server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon"
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "vercel-build": "npm install"
   },
   "keywords": [],
   "author": "",

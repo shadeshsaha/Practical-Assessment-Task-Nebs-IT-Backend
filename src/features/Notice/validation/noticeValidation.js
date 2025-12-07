@@ -38,7 +38,7 @@ export const createNoticeSchema = z
       .min(1, "Publish date is required")
       .transform((val) => new Date(val)),
     attachments: z.array(attachmentSchema).max(2).optional(),
-    status: z.enum(["draft", "published"]).optional(),
+    status: z.enum(["draft", "published"]).optional().default("draft"),
   })
   .transform((data) => ({
     ...data,
