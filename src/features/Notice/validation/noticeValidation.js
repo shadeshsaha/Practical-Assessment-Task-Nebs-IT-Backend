@@ -31,15 +31,18 @@ export const createNoticeSchema = z
     title: z.string().min(1, "Notice title is required").max(200),
     body: z.string().max(5000).optional(),
     targetType: z.enum(targetTypes, "Target type is required"),
-    targetEmployee: z.string().min(1, "Employee selection is required"),
+    targetEmployee: z.string().optional(),
     noticeType: z.enum(noticeTypes, "Notice type is required"),
-    publishDate: z.string().min(1, "Publish date is required"),
+    publishDate: z
+      .string()
+      .min(1, "Publish date is required")
+      .transform((val) => new Date(val)),
     attachments: z.array(attachmentSchema).max(2).optional(),
-    status: z.enum(["draft", "published", "unpublished"]),
+    status: z.enum(["draft", "published"]).optional(),
   })
-  .transform(({ targetEmployee, ...rest }) => ({
-    ...rest,
-    targetEmployees: [targetEmployee],
+  .transform((data) => ({
+    ...data,
+    targetEmployees: data.targetEmployee ? [data.targetEmployee] : [],
   }));
 
 export const getNoticeSchema = z.object({
